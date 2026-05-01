@@ -46,8 +46,7 @@ driver.implicitly_wait(5)  # Wait for the page to load after clicking login
 #     password_field_new.send_keys("Pymaster123!")
 
 
-
-#locate the elements dropdown and text box
+# locate the elements dropdown and text box
 
 elements = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div/div[1]/div/div/div[1]/span/div')))
 elements.click()
@@ -61,7 +60,6 @@ email_field = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((
 current_address_field = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="currentAddress"]')))
 permanent_address_field = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="permanentAddress"]')))
 submit_button = driver.find_element(By.XPATH, '//*[@id="submit"]')
-
 
 # Fill out the form fields
 full_name_field.send_keys("PyMan Smith")
