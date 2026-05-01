@@ -1,4 +1,12 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 
-service = Service("chrome-win64/chromedriver.exe")
+service = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service)
+
+driver.get("https://demoqa.com/login")
+
+input("Press Enter to close the browser...")
+
+driver.quit()
