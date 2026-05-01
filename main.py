@@ -7,6 +7,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import os
 import json
+import tkinter as tk
+from tkinter import ttk, messagebox
+import re
 
 class WebAutomation:
     def __init__(self):
@@ -177,17 +180,104 @@ class WebAutomation:
     def close(self):
         self.driver.quit()
 
-web_automation = WebAutomation()
+class ConfigurationTab:
+    def __init__(self, root):
+        self.frame = ttk.Frame(root)
+        self.config_data = {}
+        
+        # Login Section
+        ttk.Label(self.frame, text="Login Credentials", font=("Arial", 12, "bold")).pack(pady=10)
+        
+        ttk.Label(self.frame, text="Username:").pack()
+        self.username_var = tk.StringVar(value="pyman")
+        ttk.Entry(self.frame, textvariable=self.username_var, width=30).pack()
+        
+        ttk.Label(self.frame, text="Password:").pack()
+        self.password_var = tk.StringVar(value="Pymaster123!")
+        ttk.Entry(self.frame, textvariable=self.password_var, show="*", width=30).pack()
+        
+        # TextBox Section
+        ttk.Label(self.frame, text="TextBox Form Data", font=("Arial", 12, "bold")).pack(pady=10)
+        
+        ttk.Label(self.frame, text="Full Name:").pack()
+        self.fullname_var = tk.StringVar(value="PyMan Smith")
+        ttk.Entry(self.frame, textvariable=self.fullname_var, width=30).pack()
+        
+        ttk.Label(self.frame, text="Email:").pack()
+        self.email_var = tk.StringVar(value="pyman@example.com")
+        ttk.Entry(self.frame, textvariable=self.email_var, width=30).pack()
+        
+        ttk.Label(self.frame, text="Current Address:").pack()
+        self.current_addr_var = tk.StringVar(value="123 Main St, New York, NY 10001")
+        ttk.Entry(self.frame, textvariable=self.current_addr_var, width=30).pack()
+        
+        ttk.Label(self.frame, text="Permanent Address:").pack()
+        self.permanent_addr_var = tk.StringVar(value="456 Oak Ave, Los Angeles, CA 90210")
+        ttk.Entry(self.frame, textvariable=self.permanent_addr_var, width=30).pack()
+        
+        # Save button
+        ttk.Button(self.frame, text="Save Configuration", command=self.save_config).pack(pady=10)
+        
+        self.status_label = ttk.Label(self.frame, text="", foreground="green")
+        self.status_label.pack()
+    
+    def save_config(self):
+        """Save configuration to JSON file"""
+        self.config_data = {
+            "login": {
+                "username": self.username_var.get(),
+                "password": self.password_var.get()
+            },
+            "textbox": {
+                "fullname": self.fullname_var.get(),
+                "email": self.email_var.get(),
+                "current_address": self.current_addr_var.get(),
+                "permanent_address": self.permanent_addr_var.get()
+            }
+        }
+        
+        with open("automation_config.json", "w") as f:
+            json.dump(self.config_data, f, indent=2)
+        
+        self.status_label.config(text="Configuration saved successfully!")
+        messagebox.showinfo("Success", "Configuration saved to automation_config.json")
+
+def load_config(filename="automation_config.json"):
+    """Load automation configuration from JSON file"""
+    try:
+        with open(filename, "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"Config file {filename} not found. Using defaults.")
+        return {
+            "login": {"username": "pyman", "password": "Pymaster123!"},
+            "textbox": {
+                "fullname": "PyMan Smith",
+                "email": "pyman@example.com",
+                "current_address": "123 Main St, New York, NY 10001",
+                "permanent_address": "456 Oak Ave, Los Angeles, CA 90210"
+            }
+        }
+
+
+
 
 
 
 if __name__ == "__main__":
-    # data for functions
-    web_automation.login("pyman", "Pymaster123!")
-    web_automation.save_xpaths_to_file("all_xpaths.json", interactive_only=False)
-    # Extract and save only interactive elements
-    web_automation.save_xpaths_to_file("interactive_elements.json", interactive_only=True)
-    web_automation.complete_textbox("PyMan Smith", "pyman@example.com", "123 Main St, New York, NY 10001", "456 Oak Ave, Los Angeles, CA 90210")
+    config = load_config()
+    
+    web_automation = WebAutomation()
+    web_automation.login(
+        config["login"]["username"], 
+        config["login"]["password"]
+    )
+    web_automation.complete_textbox(
+        config["textbox"]["fullname"],
+        config["textbox"]["email"],
+        config["textbox"]["current_address"],
+        config["textbox"]["permanent_address"]
+    )
     web_automation.check_box_list()
     web_automation.radio_button_list()
     web_automation.web_tables()
