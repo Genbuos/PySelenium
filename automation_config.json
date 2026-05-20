@@ -1,0 +1,12 @@
+{
+  "login": {
+    "username": "pyman",
+    "password": "Pymaster123!"
+  },
+  "textbox": {
+    "fullname": "PyMan Smith",
+    "email": "pyman@example.com",
+    "current_address": "123 Main St, New York, NY 10001",
+    "permanent_address": "456 Oak Ave, Los Angeles, CA 90210"
+  }
+}
